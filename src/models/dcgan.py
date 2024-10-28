@@ -22,3 +22,25 @@ class Generator(nn.Module):
         return self.net(x)
 
 
+class Discriminator(nn.Module):
+    def __init__(self, img_channels, features_d):
+        super(Discriminator, self).__init__()
+        self.net = nn.Sequential(
+            nn.Conv2d(img_channels, features_d, 4, 2, 1),
+            nn.LeakyReLU(0.2, True),
+            self._block(features_d, features_d * 2, 4, 2, 1),
+            self._block(features_d * 2, features_d * 4, 4, 2, 1),
+            self._block(features_d * 4, features_d * 8, 4, 2, 1),
+            nn.Conv2d(features_d * 8, 1, 4, 1, 0),
+            nn.Sigmoid()
+        )
+
+    def _block(self, in_channels, out_channels, kernel_size, stride, padding):
+        return nn.Sequential(
+            nn.ConvTranspose2d(in_channels, out_channels, kernel_size, stride, padding, bias=False),
+            nn.BatchNorm2d(out_channels),
+            nn.LeakyReLU(0.2, True)
+        )
+
+    def forward(self, x):
+        return self.net(x)
