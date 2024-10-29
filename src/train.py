@@ -9,7 +9,7 @@ from src.models.dcgan import Generator,Discriminator
 # Config..
 
 z_dim = 100
-batch_size = 64
+batch_size = 16
 lr = 0.0002
 num_epochs = 5
 img_channels = 3
@@ -46,7 +46,7 @@ for epoch in range(num_epochs):
         loss_d.backward()
         optim_d.step()
 
-        # Train Generator
+        # Train Generator.
         output = disc(fake).reshape(-1)
         loss_g = criterion(output, torch.ones_like(output))
 
