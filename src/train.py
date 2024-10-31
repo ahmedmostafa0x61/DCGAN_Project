@@ -5,17 +5,18 @@ from data.download_dataset import download_cifar10
 from src.utils.data_loader import get_dataloader
 from src.utils.visualization import show_generated_images
 from src.models.dcgan import Generator,Discriminator
+import os
 
 # Config..
 
 z_dim = 100
-batch_size = 16
+batch_size = 8
 lr = 0.0002
 num_epochs = 5
 img_channels = 3
 features_g = 64
 features_d = 64
-
+save_path = 'model.pth'
 
 # Load dataset
 dataset = download_cifar10()
@@ -61,3 +62,6 @@ for epoch in range(num_epochs):
     with torch.no_grad():
         fake = gen(torch.randn(batch_size, z_dim, 1, 1).to(device))
         show_generated_images(fake)
+
+# Save the trained model
+torch.save(gen.state_dict(), save_path)
